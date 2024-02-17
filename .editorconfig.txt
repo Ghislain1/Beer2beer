@@ -72,15 +72,15 @@ indent_size = 4
 indent_style = space # Use soft tabs (spaces) for indentation.
 
 # IDE0055: Fix formatting
-dotnet_diagnostic.IDE0055.severity = warning
+dotnet_diagnostic.IDE0055.severity = error
 
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
 # Avoid "this." and "Me." if not necessary
-dotnet_style_qualification_for_field = false:refactoring
-dotnet_style_qualification_for_property = false:refactoring
-dotnet_style_qualification_for_method = false:refactoring
+dotnet_style_qualification_for_field = true:refactoring
+dotnet_style_qualification_for_property = true:refactoring
+dotnet_style_qualification_for_method = true:refactoring
 dotnet_style_qualification_for_event = false:refactoring
 
 # Use language keywords instead of framework type names for type references
