@@ -1,4 +1,4 @@
-﻿ 
+﻿
 namespace Beer2beer.UnitTest.API;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,8 +11,8 @@ using Beer2beer.Core.Interfaces;
 public class CustomerControllerTest
 {
 
-    private   Mock<ICustomerService> customerServiceMock;
-    private   Mock<ILogger<CustomerController>> loggerMock;
+    private Mock<ICustomerService> customerServiceMock;
+    private Mock<ILogger<CustomerController>> loggerMock;
     private CustomerController customerController;
 
     [SetUp]
@@ -37,7 +37,7 @@ public class CustomerControllerTest
                            .ReturnsAsync(Customers);
 
         // Act
-        var result = await  this.customerController.Get();
+        var result = await this.customerController.Get();
 
         // Assert
         Assert.IsInstanceOf<OkObjectResult>(result);
@@ -50,4 +50,4 @@ public class CustomerControllerTest
 
     }
 }
-    
+
