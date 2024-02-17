@@ -1,4 +1,4 @@
-﻿ 
+﻿
 
 namespace Beer2beer.Infrastructure.Data;
 using Beer2beer.Core.Entities;
@@ -13,7 +13,7 @@ public class ApplicationDbContextConfigurations
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
         // Add any additional entity configurations here
-       // modelBuilder.Entity<Customer>().ToTable("Customers");
+        // modelBuilder.Entity<Customer>().ToTable("Customers");
     }
 
     public static void SeedData(ModelBuilder modelBuilder)

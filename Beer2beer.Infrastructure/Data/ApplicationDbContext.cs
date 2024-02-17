@@ -11,13 +11,13 @@ public class ApplicationDbContext : IdentityDbContext
         Database.EnsureCreated();
     }
 
-  
+
     // public DbSet<Product> Products { get; set; }
     public DbSet<Customer> Customers { get; set; }
     // public DbSet<Order> Orders { get; set; }
     //  public DbSet<OrderDetails> OrderDetails { get; set; }
 
- 
+
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -25,7 +25,7 @@ public class ApplicationDbContext : IdentityDbContext
 
         ApplicationDbContextConfigurations.Configure(builder);
         ApplicationDbContextConfigurations.SeedData(builder);
-       
+
 
     }
 
