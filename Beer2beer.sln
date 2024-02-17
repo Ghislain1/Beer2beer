@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beer2beer.API", "Beer2beer.API\Beer2beer.API.csproj", "{0593ADB6-C9EE-4E36-9ACC-C49354A7A419}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beer2beer.Core", "Beer2beer.Core\Beer2beer.Core.csproj", "{62E01FF3-E2F7-416F-AC4A-61C065EE09CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beer2beer.Infrastructure", "Beer2beer.Infrastructure\Beer2beer.Infrastructure.csproj", "{AFE54167-DDFC-4CF1-A732-0D89A685DFBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0593ADB6-C9EE-4E36-9ACC-C49354A7A419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0593ADB6-C9EE-4E36-9ACC-C49354A7A419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0593ADB6-C9EE-4E36-9ACC-C49354A7A419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0593ADB6-C9EE-4E36-9ACC-C49354A7A419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62E01FF3-E2F7-416F-AC4A-61C065EE09CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62E01FF3-E2F7-416F-AC4A-61C065EE09CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62E01FF3-E2F7-416F-AC4A-61C065EE09CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62E01FF3-E2F7-416F-AC4A-61C065EE09CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE54167-DDFC-4CF1-A732-0D89A685DFBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE54167-DDFC-4CF1-A732-0D89A685DFBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE54167-DDFC-4CF1-A732-0D89A685DFBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE54167-DDFC-4CF1-A732-0D89A685DFBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF234FFD-723A-4180-BE0E-7611910CD0B7}
+	EndGlobalSection
+EndGlobal
