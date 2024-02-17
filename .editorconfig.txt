@@ -78,7 +78,7 @@ dotnet_diagnostic.IDE0055.severity = error
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
 # Avoid "this." and "Me." if not necessary
-dotnet_style_qualification_for_field = true:refactoring
+dotnet_style_qualification_for_field = false:refactoring
 dotnet_style_qualification_for_property = true:refactoring
 dotnet_style_qualification_for_method = true:refactoring
 dotnet_style_qualification_for_event = false:refactoring
