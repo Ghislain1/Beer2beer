@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿
 
 namespace Beer2beer.API.ActionResults;
+using Microsoft.AspNetCore.Mvc;
 
 // Aufgabe 26: ActionResult concept
 public sealed class InternalServerErrorObjectResult : IActionResult
