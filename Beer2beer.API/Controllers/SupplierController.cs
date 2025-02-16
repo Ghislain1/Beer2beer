@@ -17,6 +17,11 @@ public class SupplierController : ControllerBase
     };
     private readonly ILogger<SupplierController> logger;
     private readonly ISupplierService supplierService;
+    public SupplierController(ILogger<SupplierController> logger, ISupplierService supplierService)
+    {
+        this.logger = logger;
+        this.supplierService = supplierService;
+    }
 
     //   GET: api/supplier
     [HttpGet]

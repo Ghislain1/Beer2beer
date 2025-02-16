@@ -5,9 +5,9 @@ using Beer2beer.Core.Entities;
 using Beer2beer.Core.Interfaces;
 using Beer2beer.Infrastructure.Data;
 
-public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
+public class AppUserRepository : BaseRepository<AppUser>, IAppUserRepository
 {
-    public CustomerRepository(ApplicationDbContext dbContext) : base(dbContext)
+    public AppUserRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
 
 

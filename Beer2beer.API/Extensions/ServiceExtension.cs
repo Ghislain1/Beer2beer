@@ -7,13 +7,15 @@ using Beer2beer.Core.Interfaces;
 using Beer2beer.Core.Mapper;
 using Beer2beer.Core.Services;
 using Beer2beer.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+
 public static class ServiceExtension
 {
     public static IServiceCollection RegisterService(this IServiceCollection services)
     {
         #region Services
         services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<IAppUserService, AppUserService>();
         //services.AddScoped<IProductService, ProductService>();
         //services.AddScoped<IOrderService, OrderService>();
 
@@ -46,11 +48,12 @@ public static class ServiceExtension
         services.AddSingleton<IBaseMapper<Customer, CustomerViewModel>>(new BaseMapper<Customer, CustomerViewModel>(mapper));
         services.AddSingleton<IBaseMapper<CustomerViewModel, Customer>>(new BaseMapper<CustomerViewModel, Customer>(mapper));
 
-        //services.AddSingleton<IBaseMapper<Product, ProductViewModel>>(new BaseMapper<Product, ProductViewModel>(mapper));
-        //services.AddSingleton<IBaseMapper<ProductViewModel, Product>>(new BaseMapper<ProductViewModel, Product>(mapper));
+        services.AddSingleton<IBaseMapper<AppUserViewModel, AppUser>>(new BaseMapper<AppUserViewModel, AppUser>(mapper));
+        services.AddSingleton<IBaseMapper<AppUser, AppUserViewModel>>(new BaseMapper<AppUser, AppUserViewModel>(mapper));
 
-        //services.AddSingleton<IBaseMapper<Order, OrderViewModel>>(new BaseMapper<Order, OrderViewModel>(mapper));
-        //services.AddSingleton<IBaseMapper<OrderViewModel, Order>>(new BaseMapper<OrderViewModel, Order>(mapper));
+        // SCOPED
+        services.AddScoped<IAppUserRepository, AppUserRepository>();
+      
 
         #endregion
 

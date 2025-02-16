@@ -1,7 +1,8 @@
+
+// Learn more about filter in Asp.Core Webi at ==> https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/filters?view=aspnetcore-8.0
+namespace Beer2beer.API.Controllers;
 using Beer2beer.API.ActionFilters;
 using Microsoft.AspNetCore.Mvc;
-
-namespace Beer2beer.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
