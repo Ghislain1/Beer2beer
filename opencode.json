@@ -1,0 +1,101 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "username": "developer",
+  "model": "anthropic/claude-sonnet-4-6",
+  "small_model": "anthropic/claude-sonnet-4-6",
+  "default_agent": "build",
+  "shell": "powershell",
+  "logLevel": "INFO",
+  "share": "manual",
+  "autoupdate": "notify",
+  "snapshot": true,
+  "instructions": [
+    "AGENTS.md",
+    ".editorconfig.txt"
+  ],
+  "references": {
+    "docs": {
+      "path": "./docs",
+      "description": "Projektdokumentation und Architekturbeschreibungen"
+    }
+  },
+  "agent": {
+    "build": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "description": "Build agent for .NET/C# development with Clean Architecture",
+      "permission": {
+        "edit": "allow",
+        "bash": {
+          "dotnet *": "allow",
+          "git *": "allow",
+          "*": "ask"
+        }
+      }
+    },
+    "plan": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "description": "Planning agent for architecture decisions",
+      "permission": {
+        "edit": "deny",
+        "bash": "ask"
+      }
+    }
+  },
+  "command": {
+    "build": {
+      "description": "Build the .NET solution",
+      "template": "dotnet build Beer2beer.sln"
+    },
+    "test": {
+      "description": "Run unit tests",
+      "template": "dotnet test Beer2beer.UnitTest/Beer2beer.UnitTest.csproj"
+    },
+    "clean": {
+      "description": "Clean build artifacts",
+      "template": "dotnet clean Beer2beer.sln"
+    },
+    "migrate": {
+      "description": "Add new EF Core migration",
+      "template": "dotnet ef migrations add $ARGUMENTS --project Beer2beer.Infrastructure --startup-project Beer2beer.API"
+    },
+    "swagger": {
+      "description": "Open Swagger UI in browser",
+      "template": "start http://localhost:5000/swagger"
+    }
+  },
+  "mcp": {
+    "dotnet": {
+      "type": "local",
+      "command": ["dotnet", "mcp", "server"],
+      "enabled": false,
+      "env": {}
+    }
+  },
+  "permission": {
+    "edit": "allow",
+    "bash": {
+      "dotnet *": "allow",
+      "git status": "allow",
+      "git diff": "allow",
+      "git log *": "allow",
+      "*": "ask"
+    },
+    "external_directory": {
+      "~/*": "allow"
+    }
+  },
+  "formatter": false,
+  "lsp": false,
+  "experimental": {
+    "primary_tools": ["edit", "bash"],
+    "mcp_timeout": 30000
+  },
+  "tool_output": {
+    "max_lines": 200,
+    "max_bytes": 8192
+  },
+  "compaction": {
+    "auto": true,
+    "tail_turns": 15
+  }
+}
