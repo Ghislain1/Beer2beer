@@ -8,6 +8,7 @@ using Beer2beer.Core.Mapper;
 using Beer2beer.Core.Services;
 using Beer2beer.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 public static class ServiceExtension
 {
@@ -30,6 +31,12 @@ public static class ServiceExtension
         #endregion
 
         #region Mapper
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+            builder.AddDebug();
+        });
+
         var configuration = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Customer, CustomerViewModel>();
@@ -40,7 +47,7 @@ public static class ServiceExtension
 
             //cfg.CreateMap<Order, OrderViewModel>();
             //cfg.CreateMap<OrderViewModel, Order>();
-        });
+        }, loggerFactory);
 
         IMapper mapper = configuration.CreateMapper();
 
