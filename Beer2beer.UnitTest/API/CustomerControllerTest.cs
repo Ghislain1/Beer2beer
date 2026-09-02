@@ -40,9 +40,9 @@ public class CustomerControllerTest
         var result = await this.customerController.Get();
 
         // Assert
-        Assert.IsInstanceOf<OkObjectResult>(result);
+        Assert.That(result, Is.InstanceOf<OkObjectResult>());
         var okObjectResult = (OkObjectResult)result;
-        Assert.NotNull(okObjectResult);
+        Assert.That(okObjectResult, Is.Not.Null);
 
         //var model = (IEnumerable<CustomerViewModel>)okObjectResult.Value;
         //Assert.NotNull(model);

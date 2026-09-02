@@ -1,7 +1,7 @@
 # Beer2beer - Agent Instructions
 
 ## Projektübersicht
-ASP.NET Core 8 Web API nach Clean Architecture für Bierverwaltung (in Entwicklung).
+ASP.NET Core 10 Web API nach Clean Architecture für Bierverwaltung (in Entwicklung).
 
 ## Architektur
 - **Beer2beer.API**: Präsentation (Controllers, Middleware, DI)
@@ -67,8 +67,8 @@ start http://localhost:5000/swagger
 - SQLite als Datenbank (nur Development)
 
 ## NuGet-Pakete
-- AutoMapper 13.0.1
-- EF Core 8.0.2
-- Identity 8.0.2
-- Swagger 6.5.0
-- Seq Logging 8.0.0
+- AutoMapper 14.0.0
+- EF Core 10.0.0
+- Identity 10.0.0
+- Swagger 7.2.0
+- Seq Logging 9.0.0
