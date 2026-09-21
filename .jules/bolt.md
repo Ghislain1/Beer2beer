@@ -1,0 +1,3 @@
+## 2025-05-18 - Avoid unnecessary string formatting and header iteration in HTTP logging middleware
+**Learning:** In ASP.NET Core HTTP middleware executed per request, string interpolation (`$"..."`) and header enumeration (`GetHeadersAsString`) allocate strings and iterate headers on every request even if logging is disabled or structured logging parameters are used. Guarding with `_logger.IsEnabled()` and using structured message templates prevents allocations and avoids string construction overhead on hot HTTP request paths.
+**Action:** Always check `logger.IsEnabled(logLevel)` before performing string formatting or collection formatting in ASP.NET Core middleware, and use structured logging placeholders (`"Request received: {Method} {Path}"`).

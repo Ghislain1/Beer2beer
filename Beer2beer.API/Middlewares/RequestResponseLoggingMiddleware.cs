@@ -15,27 +15,38 @@ public class RequestResponseLoggingMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        // Log the incoming request
-        LogRequest(context.Request);
-
+        // Optimization: Check if Information level logging is enabled before evaluating log messages
+        // or building string representations of headers on every HTTP request.
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            LogRequest(context.Request);
+        }
 
         // Call the next middleware in the pipeline
         await _next(context);
 
-        // Log the outgoing response
-        LogResponse(context.Response);
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            LogResponse(context.Response);
+        }
     }
 
     private void LogRequest(HttpRequest request)
     {
-        _logger.LogInformation($"Request received: {request.Method} {request.Path}");
-        _logger.LogInformation($"Request headers: {GetHeadersAsString(request.Headers)}");
+        _logger.LogInformation("Request received: {Method} {Path}", request.Method, request.Path);
+        if (_logger.IsEnabled(LogLevel.Debug))
+        {
+            _logger.LogDebug("Request headers: {Headers}", GetHeadersAsString(request.Headers));
+        }
     }
 
     private void LogResponse(HttpResponse response)
     {
-        _logger.LogInformation($"Response sent: {response.StatusCode}");
-        _logger.LogInformation($"Response headers: {GetHeadersAsString(response.Headers)}");
+        _logger.LogInformation("Response sent: {StatusCode}", response.StatusCode);
+        if (_logger.IsEnabled(LogLevel.Debug))
+        {
+            _logger.LogDebug("Response headers: {Headers}", GetHeadersAsString(response.Headers));
+        }
     }
 
     private string GetHeadersAsString(IHeaderDictionary headers)
