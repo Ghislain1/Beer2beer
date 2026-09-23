@@ -129,33 +129,33 @@ jobs:
 
     - name: Check for build warnings
       run: |
-        $warnings = dotnet build ${{ env.SOLUTION_FILE }} --configuration Release 2>&1 | Select-String -Pattern "warning"
-        if ($warnings) {
-          Write-Host "Build warnings found:"
-          $warnings
-        }
+        warnings=$(dotnet build ${{ env.SOLUTION_FILE }} --configuration Release 2>&1 | grep -i ": warning " || true)
+        if [ -n "$warnings" ]; then
+          echo "Build warnings found:"
+          echo "$warnings"
+        fi
 
     - name: Verify solution structure
       run: |
-        Write-Host "Solution structure verification:"
-        Write-Host "- API Project: Beer2beer.API"
-        Write-Host "- Core Project: Beer2beer.Core"
-        Write-Host "- Infrastructure Project: Beer2beer.Infrastructure"
-        Write-Host "- Test Project: Beer2beer.UnitTest"
+        echo "Solution structure verification:"
+        echo "- API Project: Beer2beer.API"
+        echo "- Core Project: Beer2beer.Core"
+        echo "- Infrastructure Project: Beer2beer.Infrastructure"
+        echo "- Test Project: Beer2beer.UnitTest"
         
         # Verify all projects exist
-        $projects = @(
-          "Beer2beer.API/Beer2beer.API.csproj",
-          "Beer2beer.Core/Beer2beer.Core.csproj",
-          "Beer2beer.Infrastructure/Beer2beer.Infrastructure.csproj",
+        projects=(
+          "Beer2beer.API/Beer2beer.API.csproj"
+          "Beer2beer.Core/Beer2beer.Core.csproj"
+          "Beer2beer.Infrastructure/Beer2beer.Infrastructure.csproj"
           "Beer2beer.UnitTest/Beer2beer.UnitTest.csproj"
         )
         
-        foreach ($project in $projects) {
-          if (Test-Path $project) {
-            Write-Host "✓ $project found"
-          } else {
-            Write-Host "✗ $project NOT found"
+        for project in "${projects[@]}"; do
+          if [ -f "$project" ]; then
+            echo "✓ $project found"
+          else
+            echo "✗ $project NOT found"
             exit 1
-          }
-        }
+          fi
+        done

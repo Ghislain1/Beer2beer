@@ -58,30 +58,20 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public async Task<bool> IsExists<Tvalue>(string key, Tvalue value)
     {
-        var parameter = Expression.Parameter(typeof(T), "x");
-        var property = Expression.Property(parameter, key);
-        var constant = Expression.Constant(value);
-        var equality = Expression.Equal(property, constant);
-        var lambda = Expression.Lambda<Func<T, bool>>(equality, parameter);
-
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        // Performance optimization: EF.Property with AsNoTracking allows EF Core's Compiled Query Cache
+        // to parameterize and reuse SQL execution plans, avoiding runtime Expression.Constant allocations and re-compilations.
+        return await _dbContext.Set<T>()
+            .AsNoTracking()
+            .AnyAsync(x => EF.Property<Tvalue>(x, key)!.Equals(value));
     }
 
     //Before update existence check
     public async Task<bool> IsExistsForUpdate<Tid>(Tid id, string key, string value)
     {
-        var parameter = Expression.Parameter(typeof(T), "x");
-        var property = Expression.Property(parameter, key);
-        var constant = Expression.Constant(value);
-        var equality = Expression.Equal(property, constant);
-
-        var idProperty = Expression.Property(parameter, "Id");
-        var idEquality = Expression.NotEqual(idProperty, Expression.Constant(id));
-
-        var combinedExpression = Expression.AndAlso(equality, idEquality);
-        var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
-
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        // Performance optimization: Parameterized query via EF.Property with AsNoTracking enables EF Core query plan caching.
+        return await _dbContext.Set<T>()
+            .AsNoTracking()
+            .AnyAsync(x => EF.Property<string>(x, key) == value && !EF.Property<Tid>(x, "Id")!.Equals(id));
     }
 
 
