@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 public class ApplicationDbContext : IdentityDbContext
 {
+    // EnsureCreated() removed from constructor to prevent expensive database schema checks on every request.
+    // Database initialization is performed once at application startup in Program.cs.
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
     }
 
 
