@@ -128,6 +128,7 @@ jobs:
       run: dotnet build ${{ env.SOLUTION_FILE }} --no-restore --configuration Release
 
     - name: Check for build warnings
+      shell: pwsh
       run: |
         $warnings = dotnet build ${{ env.SOLUTION_FILE }} --configuration Release 2>&1 | Select-String -Pattern "warning"
         if ($warnings) {
@@ -136,6 +137,7 @@ jobs:
         }
 
     - name: Verify solution structure
+      shell: pwsh
       run: |
         Write-Host "Solution structure verification:"
         Write-Host "- API Project: Beer2beer.API"
