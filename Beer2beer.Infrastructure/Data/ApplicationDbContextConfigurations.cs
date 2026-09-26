@@ -14,6 +14,9 @@ public class ApplicationDbContextConfigurations
 
         // Add any additional entity configurations here
         // modelBuilder.Entity<Customer>().ToTable("Customers");
+
+        // Index on Email field to optimize IsExists lookup queries
+        modelBuilder.Entity<Customer>().HasIndex(c => c.Email);
     }
 
     public static void SeedData(ModelBuilder modelBuilder)

@@ -8,7 +8,8 @@ public class ApplicationDbContext : IdentityDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
+        // Database.EnsureCreated() was moved to application startup (Program.cs)
+        // to avoid executing database schema checks on every request (DbContext instantiation).
     }
 
 
