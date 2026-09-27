@@ -56,32 +56,19 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return data;
     }
 
+    // Bolt Optimization: Use EF.Property<Tvalue>(x, key) to simplify expression tree generation, avoiding Reflection runtime property lookup
     public async Task<bool> IsExists<Tvalue>(string key, Tvalue value)
     {
-        var parameter = Expression.Parameter(typeof(T), "x");
-        var property = Expression.Property(parameter, key);
-        var constant = Expression.Constant(value);
-        var equality = Expression.Equal(property, constant);
-        var lambda = Expression.Lambda<Func<T, bool>>(equality, parameter);
-
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        return await _dbContext.Set<T>()
+            .AnyAsync(x => Equals(EF.Property<Tvalue>(x, key), value));
     }
 
-    //Before update existence check
+    // Before update existence check
+    // Bolt Optimization: Use EF.Property for dynamic property evaluation in EF Core LINQ queries
     public async Task<bool> IsExistsForUpdate<Tid>(Tid id, string key, string value)
     {
-        var parameter = Expression.Parameter(typeof(T), "x");
-        var property = Expression.Property(parameter, key);
-        var constant = Expression.Constant(value);
-        var equality = Expression.Equal(property, constant);
-
-        var idProperty = Expression.Property(parameter, "Id");
-        var idEquality = Expression.NotEqual(idProperty, Expression.Constant(id));
-
-        var combinedExpression = Expression.AndAlso(equality, idEquality);
-        var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
-
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        return await _dbContext.Set<T>()
+            .AnyAsync(x => Equals(EF.Property<string>(x, key), value) && !Equals(EF.Property<Tid>(x, "Id"), id));
     }
 
 
