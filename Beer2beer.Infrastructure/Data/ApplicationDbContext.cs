@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 public class ApplicationDbContext : IdentityDbContext
 {
+    // Removed Database.EnsureCreated() from the constructor.
+    // Calling EnsureCreated() on every DbContext instantiation (scoped per HTTP request)
+    // executes redundant schema inspection queries against SQLite, causing significant request latency.
+    // Database initialization is handled once during application startup.
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
     }
 
 
