@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace Beer2beer.API.Controllers;
+
 public class RequestResponseLoggingMiddleware
 {
     private readonly RequestDelegate _next;
@@ -18,7 +21,6 @@ public class RequestResponseLoggingMiddleware
         // Log the incoming request
         LogRequest(context.Request);
 
-
         // Call the next middleware in the pipeline
         await _next(context);
 
@@ -28,18 +30,32 @@ public class RequestResponseLoggingMiddleware
 
     private void LogRequest(HttpRequest request)
     {
-        _logger.LogInformation($"Request received: {request.Method} {request.Path}");
-        _logger.LogInformation($"Request headers: {GetHeadersAsString(request.Headers)}");
+        // Performance optimization: Check if LogLevel.Information is enabled before building strings and iterating headers.
+        // This avoids string interpolation, StringBuilder allocation, and header enumeration overhead per HTTP request.
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation("Request received: {Method} {Path}", request.Method, request.Path);
+            _logger.LogInformation("Request headers: {Headers}", GetHeadersAsString(request.Headers));
+        }
     }
 
     private void LogResponse(HttpResponse response)
     {
-        _logger.LogInformation($"Response sent: {response.StatusCode}");
-        _logger.LogInformation($"Response headers: {GetHeadersAsString(response.Headers)}");
+        // Performance optimization: Check if LogLevel.Information is enabled before building strings and iterating headers.
+        if (_logger.IsEnabled(LogLevel.Information))
+        {
+            _logger.LogInformation("Response sent: {StatusCode}", response.StatusCode);
+            _logger.LogInformation("Response headers: {Headers}", GetHeadersAsString(response.Headers));
+        }
     }
 
     private string GetHeadersAsString(IHeaderDictionary headers)
     {
+        if (headers == null || headers.Count == 0)
+        {
+            return string.Empty;
+        }
+
         var stringBuilder = new StringBuilder();
         foreach (var (key, value) in headers)
         {
@@ -56,5 +72,4 @@ public static class RequestResponseLoggingMiddlewareExtensions
     {
         return builder.UseMiddleware<RequestResponseLoggingMiddleware>();
     }
-
 }

@@ -1,0 +1,3 @@
+## 2025-05-18 - Avoid Pre-Evaluation String Interpolation in ASP.NET Core Middleware
+**Learning:** In ASP.NET Core request/response middleware, string interpolation (`$"..."`) evaluates helper expressions (e.g. `GetHeadersAsString(headers)`) prior to calling logger methods. This causes `StringBuilder` allocations and string formatting on every HTTP request even when the logger level is disabled or when structured logging can defer formatting.
+**Action:** Always wrap middleware log calls with `_logger.IsEnabled(LogLevel.Information)` and use structured logging message templates (`"Request received: {Method} {Path}"`) instead of string interpolation.
