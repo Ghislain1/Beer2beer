@@ -12,8 +12,8 @@ public class ApplicationDbContextConfigurations
         modelBuilder.Entity<IdentityUser>().ToTable("Users");
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
-        // Add any additional entity configurations here
-        // modelBuilder.Entity<Customer>().ToTable("Customers");
+        // Performance optimization (Bolt): Add index on Customer.Email for fast uniqueness/existence checks.
+        modelBuilder.Entity<Customer>().HasIndex(c => c.Email);
     }
 
     public static void SeedData(ModelBuilder modelBuilder)
