@@ -25,6 +25,7 @@ public class BaseRepositoryTest
             .Options;
 
         _dbContext = new ApplicationDbContext(options);
+        _dbContext.Database.EnsureCreated();
         _repository = new CustomerRepository(_dbContext);
     }
 
