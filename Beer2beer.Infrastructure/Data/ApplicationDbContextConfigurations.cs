@@ -12,8 +12,12 @@ public class ApplicationDbContextConfigurations
         modelBuilder.Entity<IdentityUser>().ToTable("Users");
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
-        // Add any additional entity configurations here
-        // modelBuilder.Entity<Customer>().ToTable("Customers");
+        // Performance Optimization (Bolt ⚡): Add index on Customer.Email
+        // Since IsExists / IsExistsForUpdate perform uniqueness checks on Email during
+        // customer creation and update, an index improves lookup speed from O(N) table scan to O(log N) index seek.
+        modelBuilder.Entity<Customer>()
+            .HasIndex(c => c.Email)
+            .HasDatabaseName("IX_Customers_Email");
     }
 
     public static void SeedData(ModelBuilder modelBuilder)
