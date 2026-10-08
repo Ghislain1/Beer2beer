@@ -12,6 +12,9 @@ public class ApplicationDbContextConfigurations
         modelBuilder.Entity<IdentityUser>().ToTable("Users");
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
+        // Bolt optimization: Add index on Customer.Email for fast existence/uniqueness checks in IsExists and IsExistsForUpdate
+        modelBuilder.Entity<Customer>().HasIndex(c => c.Email);
+
         // Add any additional entity configurations here
         // modelBuilder.Entity<Customer>().ToTable("Customers");
     }
