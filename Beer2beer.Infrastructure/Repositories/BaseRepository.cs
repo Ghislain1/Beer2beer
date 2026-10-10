@@ -64,7 +64,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         var equality = Expression.Equal(property, constant);
         var lambda = Expression.Lambda<Func<T, bool>>(equality, parameter);
 
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        // Optimization: Use AsNoTracking() for read-only existence check to avoid EF Core change tracking overhead
+        return await _dbContext.Set<T>().AsNoTracking().AnyAsync(lambda);
     }
 
     //Before update existence check
@@ -81,7 +82,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         var combinedExpression = Expression.AndAlso(equality, idEquality);
         var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
 
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        // Optimization: Use AsNoTracking() for read-only existence check to avoid EF Core change tracking overhead
+        return await _dbContext.Set<T>().AsNoTracking().AnyAsync(lambda);
     }
 
 
