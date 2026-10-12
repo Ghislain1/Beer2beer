@@ -28,14 +28,28 @@ public class RequestResponseLoggingMiddleware
 
     private void LogRequest(HttpRequest request)
     {
-        _logger.LogInformation($"Request received: {request.Method} {request.Path}");
-        _logger.LogInformation($"Request headers: {GetHeadersAsString(request.Headers)}");
+        // Performance optimization: Avoid string allocations and header string building if Information logging is disabled
+        if (!_logger.IsEnabled(LogLevel.Information))
+        {
+            return;
+        }
+
+        // Use structured logging message templates to avoid string interpolation allocations
+        _logger.LogInformation("Request received: {Method} {Path}", request.Method, request.Path);
+        _logger.LogInformation("Request headers: {Headers}", GetHeadersAsString(request.Headers));
     }
 
     private void LogResponse(HttpResponse response)
     {
-        _logger.LogInformation($"Response sent: {response.StatusCode}");
-        _logger.LogInformation($"Response headers: {GetHeadersAsString(response.Headers)}");
+        // Performance optimization: Avoid string allocations and header string building if Information logging is disabled
+        if (!_logger.IsEnabled(LogLevel.Information))
+        {
+            return;
+        }
+
+        // Use structured logging message templates to avoid string interpolation allocations
+        _logger.LogInformation("Response sent: {StatusCode}", response.StatusCode);
+        _logger.LogInformation("Response headers: {Headers}", GetHeadersAsString(response.Headers));
     }
 
     private string GetHeadersAsString(IHeaderDictionary headers)
