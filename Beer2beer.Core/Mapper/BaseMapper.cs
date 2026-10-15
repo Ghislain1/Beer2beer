@@ -19,6 +19,8 @@ public class BaseMapper<TSource, TDestination> : IBaseMapper<TSource, TDestinati
 
     public IEnumerable<TDestination> MapList(IEnumerable<TSource> source)
     {
-        return _mapper.Map<IEnumerable<TDestination>>(source);
+        // Mapping directly to List<TDestination> avoids AutoMapper's interface resolution
+        // overhead and deferred iterator wrapper allocations when mapping IEnumerable collections.
+        return _mapper.Map<List<TDestination>>(source);
     }
 }
