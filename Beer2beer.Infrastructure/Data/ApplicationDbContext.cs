@@ -8,7 +8,10 @@ public class ApplicationDbContext : IdentityDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
+        // Optimization: Avoid calling Database.EnsureCreated() here in the constructor.
+        // Since ApplicationDbContext is scoped per request, calling EnsureCreated() on every instantiation
+        // causes redundant database schema checks on every HTTP request.
+        // Database initialization is handled once during startup in Program.cs.
     }
 
 
