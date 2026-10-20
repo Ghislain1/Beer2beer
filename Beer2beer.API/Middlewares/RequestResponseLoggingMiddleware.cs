@@ -41,9 +41,10 @@ public class RequestResponseLoggingMiddleware
     private string GetHeadersAsString(IHeaderDictionary headers)
     {
         var stringBuilder = new StringBuilder();
+        // Optimization: Avoid string interpolation inside the loop to prevent allocating intermediate strings per header entry.
         foreach (var (key, value) in headers)
         {
-            stringBuilder.AppendLine($"{key}: {value}");
+            stringBuilder.Append(key).Append(": ").AppendLine(value);
         }
         return stringBuilder.ToString();
     }
