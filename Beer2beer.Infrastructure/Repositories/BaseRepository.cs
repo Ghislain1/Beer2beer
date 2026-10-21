@@ -6,14 +6,17 @@ using Beer2beer.Core.Interfaces;
 using Beer2beer.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 //Unit of Work Pattern
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
+    private static readonly ConcurrentDictionary<(Type Type, string PropertyName), PropertyInfo> PropertyCache = new();
 
     protected readonly ApplicationDbContext _dbContext;
     protected DbSet<T> DbSet => _dbContext.Set<T>();
@@ -21,6 +24,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public BaseRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    private static PropertyInfo GetPropertyInfo(Type type, string propertyName)
+    {
+        return PropertyCache.GetOrAdd((type, propertyName), key =>
+            key.Type.GetProperty(key.PropertyName)
+            ?? throw new ArgumentException($"Property '{key.PropertyName}' not found on type '{key.Type.Name}'."));
     }
 
     public async Task<IEnumerable<T>> GetAll()
@@ -59,7 +69,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public async Task<bool> IsExists<Tvalue>(string key, Tvalue value)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
-        var property = Expression.Property(parameter, key);
+        // Optimization: Use cached PropertyInfo to avoid repeated reflection lookups on every existence check
+        var propertyInfo = GetPropertyInfo(typeof(T), key);
+        var property = Expression.Property(parameter, propertyInfo);
         var constant = Expression.Constant(value);
         var equality = Expression.Equal(property, constant);
         var lambda = Expression.Lambda<Func<T, bool>>(equality, parameter);
@@ -71,11 +83,14 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public async Task<bool> IsExistsForUpdate<Tid>(Tid id, string key, string value)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
-        var property = Expression.Property(parameter, key);
+        // Optimization: Use cached PropertyInfo to avoid repeated reflection lookups on every existence check
+        var propertyInfo = GetPropertyInfo(typeof(T), key);
+        var property = Expression.Property(parameter, propertyInfo);
         var constant = Expression.Constant(value);
         var equality = Expression.Equal(property, constant);
 
-        var idProperty = Expression.Property(parameter, "Id");
+        var idPropertyInfo = GetPropertyInfo(typeof(T), "Id");
+        var idProperty = Expression.Property(parameter, idPropertyInfo);
         var idEquality = Expression.NotEqual(idProperty, Expression.Constant(id));
 
         var combinedExpression = Expression.AndAlso(equality, idEquality);
