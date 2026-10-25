@@ -12,8 +12,11 @@ public class ApplicationDbContextConfigurations
         modelBuilder.Entity<IdentityUser>().ToTable("Users");
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
-        // Add any additional entity configurations here
-        // modelBuilder.Entity<Customer>().ToTable("Customers");
+        // Optimization: Index Customer.Email for O(log N) lookups on email existence checks
+        // (IsExists and IsExistsForUpdate queries) during customer creation and updates.
+        modelBuilder.Entity<Customer>()
+            .HasIndex(c => c.Email)
+            .IsUnique();
     }
 
     public static void SeedData(ModelBuilder modelBuilder)
