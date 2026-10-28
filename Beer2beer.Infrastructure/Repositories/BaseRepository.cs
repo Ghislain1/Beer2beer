@@ -16,16 +16,19 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
 
     protected readonly ApplicationDbContext _dbContext;
-    protected DbSet<T> DbSet => _dbContext.Set<T>();
+    // Optimization: Cache DbSet<T> in a readonly field to avoid dynamic _dbContext.Set<T>() lookups on every repository operation.
+    protected readonly DbSet<T> _dbSet;
+    protected DbSet<T> DbSet => _dbSet;
 
     public BaseRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
+        _dbSet = dbContext.Set<T>();
     }
 
     public async Task<IEnumerable<T>> GetAll()
     {
-        var data = await _dbContext.Set<T>()
+        var data = await _dbSet
             .AsNoTracking()
             .ToListAsync();
 
@@ -34,20 +37,20 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     //public virtual async Task<PaginatedDataViewModel<T>> GetPaginatedData(int pageNumber, int pageSize)
     //{
-    //    var query = _dbContext.Set<T>()
+    //    var query = _dbSet
     //        .Skip((pageNumber - 1) * pageSize)
     //        .Take(pageSize)
     //        .AsNoTracking();
 
     //    var data = await query.ToListAsync();
-    //    var totalCount = await _dbContext.Set<T>().CountAsync();
+    //    var totalCount = await _dbSet.CountAsync();
 
     //    return new PaginatedDataViewModel<T>(data, totalCount);
     //}
 
     public async Task<T> GetById<Tid>(Tid id)
     {
-        var data = await _dbContext.Set<T>().FindAsync(id);
+        var data = await _dbSet.FindAsync(id);
         if (data == null)
         {
             throw new NotFoundException("No data found");
@@ -64,7 +67,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         var equality = Expression.Equal(property, constant);
         var lambda = Expression.Lambda<Func<T, bool>>(equality, parameter);
 
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        return await _dbSet.AnyAsync(lambda);
     }
 
     //Before update existence check
@@ -81,32 +84,32 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         var combinedExpression = Expression.AndAlso(equality, idEquality);
         var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
 
-        return await _dbContext.Set<T>().AnyAsync(lambda);
+        return await _dbSet.AnyAsync(lambda);
     }
 
 
     public async Task<T> Create(T model)
     {
-        await _dbContext.Set<T>().AddAsync(model);
+        await _dbSet.AddAsync(model);
         await _dbContext.SaveChangesAsync();
         return model;
     }
 
     public async Task CreateRange(List<T> model)
     {
-        await _dbContext.Set<T>().AddRangeAsync(model);
+        await _dbSet.AddRangeAsync(model);
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task Update(T model)
     {
-        _dbContext.Set<T>().Update(model);
+        _dbSet.Update(model);
         await _dbContext.SaveChangesAsync();
     }
 
     public async Task Delete(T model)
     {
-        _dbContext.Set<T>().Remove(model);
+        _dbSet.Remove(model);
         await _dbContext.SaveChangesAsync();
     }
 
