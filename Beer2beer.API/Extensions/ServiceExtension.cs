@@ -23,10 +23,12 @@ public static class ServiceExtension
         #endregion
 
         #region Repositories
-        services.AddTransient<ICustomerRepository, CustomerRepository>();
-        //services.AddTransient<IProductRepository, ProductRepository>();
-        //services.AddTransient<IOrderRepository, OrderRepository>();
-        //services.AddTransient<IOrderDetailsRepository, OrderDetailsRepository>();
+        // Optimization: Registered as Scoped matching ApplicationDbContext and ICustomerService lifetime
+        // to prevent unnecessary repository re-instantiation per dependency injection request.
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        //services.AddScoped<IProductRepository, ProductRepository>();
+        //services.AddScoped<IOrderRepository, OrderRepository>();
+        //services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
 
         #endregion
 
