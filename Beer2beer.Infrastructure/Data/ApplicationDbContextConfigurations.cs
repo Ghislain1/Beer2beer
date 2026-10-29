@@ -12,8 +12,11 @@ public class ApplicationDbContextConfigurations
         modelBuilder.Entity<IdentityUser>().ToTable("Users");
         modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 
-        // Add any additional entity configurations here
-        // modelBuilder.Entity<Customer>().ToTable("Customers");
+        // Optimization: Index Customer Email field for fast lookup during duplicate validation.
+        // Queries like IsExists("Email", email) or IsExistsForUpdate(id, "Email", email) in CustomerController
+        // perform queries filtering by Email. Without an index, this triggers an O(N) full table scan.
+        modelBuilder.Entity<Customer>()
+            .HasIndex(c => c.Email);
     }
 
     public static void SeedData(ModelBuilder modelBuilder)
